@@ -31,7 +31,7 @@
         state: present
   rescue:
     - name: show rescue debug message
-      debug:
+      ansible.builtin.debug:
         msg: 'Kodi not available on this Ubuntu release'
   when: ansible_distribution == "Ubuntu"
 
