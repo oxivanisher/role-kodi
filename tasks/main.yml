@@ -18,19 +18,20 @@
       ansible.builtin.apt_key:
         keyserver: keyserver.ubuntu.com
         id: 189701DA570C56B9488EF60A6D975C4791E7EE5E
-    
+
     - name: add Kodi PPA repository
       ansible.builtin.apt_repository:
         repo: ppa:team-xbmc/ppa
         state: present
-        update_cache: yes
-    
+        update_cache: true
+
     - name: install Kodi
       ansible.builtin.package:
         name: kodi
         state: present
   rescue:
-    - debug:
+    - name: show rescue debug message
+      debug:
         msg: 'Kodi not available on this Ubuntu release'
   when: ansible_distribution == "Ubuntu"
 
