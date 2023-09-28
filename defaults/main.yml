@@ -1,2 +1,4 @@
 ---
 # defaults file for kodi
+kodi:
+  os_user: your_user

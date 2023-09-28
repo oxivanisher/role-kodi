@@ -1,12 +1,11 @@
 ---
-
 # set kodi user var
-- name: "setting default kodi user to {{ kodi.os_user }}"
+- name: "Setting default kodi user to {{ kodi.os_user }}"
   ansible.builtin.set_fact:
     kodi_os_user: "{{ kodi.os_user }}"
   when: kodi_os_user is undefined
 
-- name: setting kodi user to root fot openelec
+- name: Setting kodi user to root fot openelec
   ansible.builtin.set_fact:
     kodi_os_user: "root"
   when: ansible_distribution == "LibreELEC"
@@ -32,78 +31,78 @@
   rescue:
     - name: show rescue debug message
       ansible.builtin.debug:
-        msg: 'Kodi not available on this Ubuntu release'
+        msg: "Kodi not available on this Ubuntu release"
   when: ansible_distribution == "Ubuntu"
 
 # set things for raspian and xbian
-- name: "setting kodi directory to /home/{{ kodi_os_user }}"
+- name: "Setting kodi directory to /home/{{ kodi_os_user }}"
   ansible.builtin.set_fact:
     kodi_path: "/home/{{ kodi_os_user }}"
   when: ansible_distribution != "LibreELEC"
 
 # set things for openelec
-- name: "setting kodi directory to /storage for openelec"
+- name: "Setting kodi directory to /storage for openelec"
   ansible.builtin.set_fact:
     kodi_path: "/storage"
   when: ansible_distribution == "LibreELEC"
 
-- name: create config directory
+- name: Create config directory
   ansible.builtin.file:
     path: "{{ kodi_path }}/.kodi/userdata/"
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
 
-- name: put kodi configuration in place
+- name: Put kodi configuration in place
   ansible.builtin.template:
     src: advancedsettings.xml.jinja2
     dest: "{{ kodi_path }}/.kodi/userdata/advancedsettings.xml"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0644
+    mode: "0644"
 
-- name: put kodi sources configuration in place
+- name: Put kodi sources configuration in place
   ansible.builtin.template:
     src: sources.xml.jinja2
     dest: "{{ kodi_path }}/.kodi/userdata/sources.xml"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0644
+    mode: "0644"
 
-- name: ensure background images folder
+- name: Ensure background images folder
   ansible.builtin.file:
     path: "{{ kodi_path }}/background_images/"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0750
+    mode: "0750"
     state: directory
 
-- name: putting background images in place
+- name: Putting background images in place
   ansible.builtin.copy:
-    src: "background_images"
+    src: "{{ playbook_dir }}/files/kodi_background_images"
     dest: "{{ kodi_path }}"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0644
+    mode: "0644"
 
-- name: ensure scripts folder
+- name: Ensure scripts folder
   ansible.builtin.file:
     path: "{{ kodi_path }}/scripts/"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0750
+    mode: "0750"
     state: directory
 
-- name: install background changer script
+- name: Install background changer script
   ansible.builtin.template:
     src: xbmc_bg_changer.sh.jinja2
     dest: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
-    mode: 0750
+    mode: "0750"
 
-- name: ensure background changer script in cron.hourly
+- name: Ensure background changer script in cron.hourly
   ansible.builtin.file:
     src: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
     dest: /etc/cron.hourly/xbmc_bg_changer
