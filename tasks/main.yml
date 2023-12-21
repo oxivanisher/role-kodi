@@ -16,11 +16,6 @@
     # install package on ubuntu hosts
     - name: Remove legacy apt file
       ansible.builtin.file:
-        path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_hirsute.list
-        state: absent
-
-    - name: Remove legacy apt file
-      ansible.builtin.file:
         path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_jammy.list
         state: absent
 
