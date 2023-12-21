@@ -14,6 +14,10 @@
   when: ansible_distribution == "Ubuntu"
   block:
     # install package on ubuntu hosts
+
+    # please be aware, that ubuntu mantic 23.10 seems to have no releases for kodi in ppa. it might be that
+    # kodi will be in the official ubuntu repo? check https://kodi.wiki/view/Official_Ubuntu_PPA on new LSB
+
     - name: Remove legacy apt file
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_jammy.list
