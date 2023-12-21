@@ -14,16 +14,21 @@
   when: ansible_distribution == "Ubuntu"
   block:
     # install package on ubuntu hosts
-    - name: Add Kodi PPA apt key
-      ansible.builtin.apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: 189701DA570C56B9488EF60A6D975C4791E7EE5E
+    - name: Remove legacy apt file
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_hirsute.list
+        state: absent
 
-    - name: Add Kodi PPA repository
-      ansible.builtin.apt_repository:
-        repo: ppa:team-xbmc/ppa
+    - name: Add Kodi repo using key from URL
+      ansible.builtin.deb822_repository:
+        name: kodi-ppa
+        types: [deb, deb-src]
+        uris: https://ppa.launchpadcontent.net/team-xbmc/ppa/ubuntu
+        suites: ["{{ ansible_distribution_release|lower }}"]
+        components: [main]
+        signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
         state: present
-        update_cache: true
+        enabled: true
 
     - name: Install Kodi
       ansible.builtin.package:
