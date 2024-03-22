@@ -28,7 +28,7 @@
         name: kodi-ppa
         types: [deb, deb-src]
         uris: https://ppa.launchpadcontent.net/team-xbmc/ppa/ubuntu
-        suites: ["{{ ansible_distribution_release|lower }}"]
+        suites: ["{{ ansible_distribution_release | lower }}"]
         components: [main]
         signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
         state: present
