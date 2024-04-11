@@ -22,6 +22,8 @@
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_jammy.list
         state: absent
+      become: true
+      become_user: root
 
     - name: Add Kodi repo using key from URL
       ansible.builtin.deb822_repository:
@@ -33,11 +35,16 @@
         signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
         state: present
         enabled: true
+      become: true
+      become_user: root
 
     - name: Install Kodi
       ansible.builtin.package:
         name: kodi
         state: present
+      become: true
+      become_user: root
+
   rescue:
     - name: Show rescue debug message
       ansible.builtin.debug:
@@ -62,6 +69,8 @@
     mode: "0755"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
+  become: true
+  become_user: root
 
 - name: Put kodi configuration in place
   ansible.builtin.template:
@@ -70,6 +79,8 @@
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0644"
+  become: true
+  become_user: root
 
 - name: Put kodi sources configuration in place
   ansible.builtin.template:
@@ -78,6 +89,8 @@
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0644"
+  become: true
+  become_user: root
 
 - name: Ensure background images folder
   ansible.builtin.file:
@@ -86,6 +99,8 @@
     group: "{{ kodi_os_user }}"
     mode: "0750"
     state: directory
+  become: true
+  become_user: root
 
 - name: Putting background images in place
   ansible.builtin.copy:
@@ -94,6 +109,8 @@
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0644"
+  become: true
+  become_user: root
 
 - name: Ensure scripts folder
   ansible.builtin.file:
@@ -102,6 +119,8 @@
     group: "{{ kodi_os_user }}"
     mode: "0750"
     state: directory
+  become: true
+  become_user: root
 
 - name: Install background changer script
   ansible.builtin.template:
@@ -110,6 +129,8 @@
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0750"
+  become: true
+  become_user: root
 
 - name: Ensure background changer script in cron.hourly
   ansible.builtin.file:
@@ -120,3 +141,5 @@
     state: link
   when: ansible_distribution != "LibreELEC"
   ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  become_user: root
