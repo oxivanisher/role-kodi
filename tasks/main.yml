@@ -34,7 +34,7 @@
       ansible.builtin.package:
         name: kodi
         state: absent
-      when: old_apt_source.state.exists
+      when: old_apt_source.stat.exists
 
     - name: Add Kodi repo using key from URL
       ansible.builtin.deb822_repository:
