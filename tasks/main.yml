@@ -33,14 +33,14 @@
         suites: ["{{ ansible_distribution_release | lower }}"]
         components: [main]
         signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
-        state: present
+        state: absent
         enabled: true
       become: true
       become_user: root
 
     - name: Install Kodi
-      ansible.builtin.package:
-        name: kodi
+      community.general.flatpak:
+        name: tv.kodi.Kodi
         state: present
       become: true
       become_user: root
