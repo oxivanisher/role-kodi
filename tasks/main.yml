@@ -25,6 +25,17 @@
       become: true
       become_user: root
 
+    - name: Check legay apt file two
+      ansible.builtin.stat:
+        path: /etc/apt/sources.list.d/kodi-ppa.sources
+      register: old_apt_source
+
+    - name: Remove old PPA package
+      ansible.builtin.package:
+        name: kodi
+        state: absent
+      when: old_apt_source.state.exists
+
     - name: Add Kodi repo using key from URL
       ansible.builtin.deb822_repository:
         name: kodi-ppa
@@ -35,6 +46,13 @@
         signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
         state: absent
         enabled: true
+      become: true
+      become_user: root
+
+    - name: Ensure flatpak is installed
+      ansible.builtin.package:
+        name: flatpak
+        state: present
       become: true
       become_user: root
 
