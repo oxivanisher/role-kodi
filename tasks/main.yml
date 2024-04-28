@@ -54,6 +54,7 @@
         name: flathub
         state: present
         enabled: true
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
       become: true
       become_user: root
 
@@ -68,6 +69,7 @@
       community.general.flatpak:
         name: tv.kodi.Kodi
         state: present
+        remote: flathub
       become: true
       become_user: root
 
