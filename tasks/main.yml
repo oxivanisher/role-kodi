@@ -3,6 +3,7 @@
 - name: "Setting kodi directory to /home/{{ kodi_os_user }}"
   ansible.builtin.set_fact:
     kodi_path: "/home/{{ kodi_os_user }}"
+    kodi_systemd_location: /etc/systemd/system/
   when:
     - kodi_os_user | length > 0
     - ansible_distribution != "LibreELEC"
@@ -11,6 +12,7 @@
   ansible.builtin.set_fact:
     kodi_os_user: "root"
     kodi_path: "/storage"
+    kodi_systemd_location: /storage/.config/system.d
   when: ansible_distribution == "LibreELEC"
 
 - name: Install kodi on ubuntu
@@ -165,7 +167,7 @@
 - name: Deploy systemctl background changer systemd unit
   ansible.builtin.template:
     src: kodi_bg_changer.service.jinja2
-    dest: /etc/systemd/system/kodi_bg_changer.service
+    dest: "{{ kodi_systemd_location }}/kodi_bg_changer.service"
     owner: root
     group: root
     mode: "0644"
@@ -175,9 +177,11 @@
 - name: Deploy systemctl background changer systemd unit timer
   ansible.builtin.template:
     src: kodi_bg_changer.timer.jinja2
-    dest: /etc/systemd/system/kodi_bg_changer.timer
+    dest: "{{ kodi_systemd_location }}/kodi_bg_changer.timer"
     owner: root
     group: root
     mode: "0644"
   become: true
   become_user: root
+
+# /storage/.config/system.d
