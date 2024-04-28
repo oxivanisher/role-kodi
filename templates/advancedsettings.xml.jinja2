@@ -73,23 +73,15 @@
       <upnpserver>false</upnpserver>
       <useairplaypassword>false</useairplaypassword>
       <webserver>true</webserver>
-      {% if kodi_webserver_password |length -%}
-      <webserverpassword>{{ kodi_webserver_password }}</webserverpassword>
-      {%- endif %}
+      {% if kodi_webserver_username | length %}<webserverusername>{{ kodi_webserver_username }}</webserverusername>{% endif %}
+      {% if kodi_webserver_password | length %}<webserverpassword>{{ kodi_webserver_password }}</webserverpassword>{% endif %}
       <webserverport>8080</webserverport>
-      {% if kodi_webserver_username |length -%}<webserverusername>
-      {{ kodi_webserver_username }}</webserverusername>
-      {%- endif %}
       <webskin>webinterface.default</webskin>
       <zeroconf>false</zeroconf>
     </services>
     <smb>
-      {% if kodi_wins_server |length -%}
-      <winsserver>{{ kodi_wins_server }}</winsserver>
-      {%- endif %}
-      {% if kodi_smb_workgroup |length -%}
-      <workgroup>{{ kodi_smb_workgroup }}</workgroup>
-      {%- endif %}
+      {% if kodi_wins_server | length %}<winsserver>{{ kodi_wins_server }}</winsserver>{% endif %}
+      {% if kodi_smb_workgroup | length %}<workgroup>{{ kodi_smb_workgroup }}</workgroup>{% endif %}
     </smb>
     <myvideos>
       <startwindow>10025</startwindow>
