@@ -5,7 +5,7 @@
     kodi_path: "/home/{{ kodi_os_user }}"
   when:
     - kodi_os_user | length > 0
-    - ansible_distribution == "Ubuntu"
+    - ansible_distribution != "LibreELEC"
 
 - name: Setting kodi variables for openelec
   ansible.builtin.set_fact:
@@ -14,7 +14,7 @@
   when: ansible_distribution == "LibreELEC"
 
 - name: Install kodi on ubuntu
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution != "LibreELEC"
   block:
     # install package on ubuntu hosts as flatpak since the PPA is abandoned
 
@@ -138,8 +138,8 @@
 
 - name: Install background changer script
   ansible.builtin.template:
-    src: xbmc_bg_changer.sh.jinja2
-    dest: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
+    src: kodi_bg_changer.sh.jinja2
+    dest: "{{ kodi_path }}/scripts/kodi_bg_changer.sh"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0750"
@@ -151,7 +151,14 @@
     path: /etc/cron.hourly/xbmc_bg_changer
     state: absent
   when: ansible_distribution != "LibreELEC"
-  ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  become_user: root
+
+- name: Remove legacy cron script
+  ansible.builtin.file:
+    path: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
+    state: absent
+  when: ansible_distribution != "LibreELEC"
   become: true
   become_user: root
 
