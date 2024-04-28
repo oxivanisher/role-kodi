@@ -1,2 +1,3 @@
 ---
 # vars file for kodi
+kodi_data_dir: .kodi/userdata

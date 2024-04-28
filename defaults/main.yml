@@ -1,4 +1,14 @@
 ---
 # defaults file for kodi
-kodi:
-  os_user: your_user
+kodi_os_user:
+kodi_mysql_host:
+kodi_mysql_port:
+kodi_mysql_username:
+kodi_mysql_database:
+kodi_mysql_password:
+kodi_metadata_share:
+kodi_webserver_username:
+kodi_webserver_password:
+kodi_wins_server:
+kodi_smb_workgroup:
+kodi_sources: []

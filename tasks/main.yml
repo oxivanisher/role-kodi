@@ -1,22 +1,31 @@
 ---
-# set kodi user var
-- name: "Setting default kodi user to {{ kodi.os_user }}"
-  ansible.builtin.set_fact:
-    kodi_os_user: "{{ kodi.os_user }}"
-  when: kodi_os_user is undefined
 
-- name: Setting kodi user to root fot openelec
+- name: "Setting kodi directory to /home/{{ kodi_os_user }}"
+  ansible.builtin.set_fact:
+    kodi_path: "/home/{{ kodi_os_user }}"
+  when:
+    - kodi_os_user | length > 0
+    - ansible_distribution == "Ubuntu"
+
+- name: Setting kodi variables for openelec
   ansible.builtin.set_fact:
     kodi_os_user: "root"
+    kodi_path: "/storage"
   when: ansible_distribution == "LibreELEC"
 
 - name: Install kodi on ubuntu
   when: ansible_distribution == "Ubuntu"
   block:
-    # install package on ubuntu hosts
+    # install package on ubuntu hosts as flatpak since the PPA is abandoned
 
-    # please be aware, that ubuntu mantic 23.10 seems to have no releases for kodi in ppa. it might be that
-    # kodi will be in the official ubuntu repo? check https://kodi.wiki/view/Official_Ubuntu_PPA on new LSB
+    - name: Setting kodi user data directory for flatpak
+      ansible.builtin.set_fact:
+        kodi_data_dir: ".var/app/tv.kodi.Kodi/data/userdata"
+
+    - name: Ensure no kodi package is installed from apt sources
+      ansible.builtin.package:
+        name: kodi
+        state: absent
 
     - name: Remove legacy apt file
       ansible.builtin.file:
@@ -24,17 +33,6 @@
         state: absent
       become: true
       become_user: root
-
-    - name: Check legay apt file two
-      ansible.builtin.stat:
-        path: /etc/apt/sources.list.d/kodi-ppa.sources
-      register: old_apt_source
-
-    - name: Remove old PPA package
-      ansible.builtin.package:
-        name: kodi
-        state: absent
-      when: old_apt_source.stat.exists
 
     - name: Add Kodi repo using key from URL
       ansible.builtin.deb822_repository:
@@ -78,21 +76,9 @@
       ansible.builtin.debug:
         msg: "Kodi not available on this Ubuntu release"
 
-# set things for raspian and xbian
-- name: "Setting kodi directory to /home/{{ kodi_os_user }}"
-  ansible.builtin.set_fact:
-    kodi_path: "/home/{{ kodi_os_user }}"
-  when: ansible_distribution != "LibreELEC"
-
-# set things for openelec
-- name: "Setting kodi directory to /storage for openelec"
-  ansible.builtin.set_fact:
-    kodi_path: "/storage"
-  when: ansible_distribution == "LibreELEC"
-
 - name: Create config directory
   ansible.builtin.file:
-    path: "{{ kodi_path }}/.kodi/userdata/"
+    path: "{{ kodi_path }}/{{ kodi_data_dir }}/"
     state: directory
     mode: "0755"
     owner: "{{ kodi_os_user }}"
@@ -103,7 +89,7 @@
 - name: Put kodi configuration in place
   ansible.builtin.template:
     src: advancedsettings.xml.jinja2
-    dest: "{{ kodi_path }}/.kodi/userdata/advancedsettings.xml"
+    dest: "{{ kodi_path }}/{{ kodi_data_dir }}/advancedsettings.xml"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0644"
@@ -113,7 +99,7 @@
 - name: Put kodi sources configuration in place
   ansible.builtin.template:
     src: sources.xml.jinja2
-    dest: "{{ kodi_path }}/.kodi/userdata/sources.xml"
+    dest: "{{ kodi_path }}/{{ kodi_data_dir }}/sources.xml"
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user }}"
     mode: "0644"

@@ -10,14 +10,16 @@
 
    </gui>
 
+{% if kodi_mysql_host | length -%}
    <videodatabase>
         <type>mysql</type>
-        <host>{{ kodi.mysql.host }}</host>
-        <port>{{ kodi.mysql.port }}</port>
-        <user>{{ kodi.mysql.username }}</user>
-        <name>{{ kodi.mysql.database }}</name>
-        <pass>{{ kodi.mysql.password }}</pass>
+        <host>{{ kodi_mysql_host }}</host>
+        <port>{{ kodi_mysql_port }}</port>
+        <user>{{ kodi_mysql_username }}</user>
+        <name>{{ kodi_mysql_database }}</name>
+        <pass>{{ kodi_mysql_password }}</pass>
     </videodatabase>
+{%- endif %}
 
     <videolibrary>
       <importwatchedstate>true</importwatchedstate>
@@ -26,24 +28,26 @@
 
     <enablemultimediakeys>true</enablemultimediakeys>
 
+{% if kodi_metadata_share | length -%}
     <pathsubstitution>
       <substitute>
         <from>special://masterprofile/playlists/</from>
-        <to>{{ kodi.metadata_share }}/playlists/</to>
+        <to>{{ kodi_metadata_share }}/playlists/</to>
       </substitute>
       <substitute>
         <from>special://masterprofile/mediasources.xml</from>
-        <to>{{ kodi.metadata_share }}/mediasources.xml</to>
+        <to>{{ kodi_metadata_share }}/mediasources.xml</to>
       </substitute>
       <substitute>
         <from>special://masterprofile/RssFeeds.xml</from>
-        <to>{{ kodi.metadata_share }}/RssFeeds.xml</to>
+        <to>{{ kodi_metadata_share }}/RssFeeds.xml</to>
       </substitute>
       <substitute>
         <from>special://masterprofile/favourites.xml</from>
-        <to>{{ kodi.metadata_share }}/favourites.xml</to>
+        <to>{{ kodi_metadata_share }}/favourites.xml</to>
       </substitute>
     </pathsubstitution>
+{%- endif %}
     <locale>
         <audiolanguage>original</audiolanguage>
         <charset>DEFAULT</charset>
@@ -68,15 +72,15 @@
         <upnpserver>false</upnpserver>
         <useairplaypassword>false</useairplaypassword>
         <webserver>true</webserver>
-        <webserverpassword>{{ kodi.webserver.password }}</webserverpassword>
+        {% if kodi_webserver_password |length %}<webserverpassword>{{ kodi_webserver_password }}</webserverpassword>{% endif %}
         <webserverport>8080</webserverport>
-        <webserverusername>{{ kodi.webserver.username }}</webserverusername>
+        {% if kodi_webserver_username |length %}<webserverusername>{{ kodi_webserver_username }}</webserverusername>{% endif %}
         <webskin>webinterface.default</webskin>
         <zeroconf>false</zeroconf>
     </services>
     <smb>
-        <winsserver>{{ kodi.wins_server }}</winsserver>
-        <workgroup>{{ kodi.smb_workgroup }}</workgroup>
+        {% if kodi_wins_server |length %}<winsserver>{{ kodi_wins_server }}</winsserver>{% endif %}
+        {% if kodi_smb_workgroup |length %}<workgroup>{{ kodi_smb_workgroup }}</workgroup>{% endif %}
     </smb>
     <myvideos>
         <startwindow>10025</startwindow>
