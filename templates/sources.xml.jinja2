@@ -1,21 +1,21 @@
 <sources>
-    <files>
-        <source>
-                <name>XBMC HUB Fusion</name>
-                <path pathversion="1">http://fusion.xbmchub.com/</path>
-        </source>
-        <source>
-                <name>Root filesystem</name>
-                <path pathversion="1">/</path>
-        </source>
-    </files>
-   <video>
-        <default pathversion="1"></default>
+  <files>
+    <source>
+      <name>XBMC HUB Fusion</name>
+      <path pathversion="1">http://fusion.xbmchub.com/</path>
+    </source>
+    <source>
+      <name>Root filesystem</name>
+      <path pathversion="1">/</path>
+    </source>
+  </files>
+  <video>
+    <default pathversion="1"></default>
 {% for name, url in kodi_sources.items() %}
-        <source>
-            <name>{{ name }}</name>
-            <path pathversion="1">{{ url }}</path>
-        </source>
+    <source>
+      <name>{{ name }}</name>
+      <path pathversion="1">{{ url }}</path>
+    </source>
 {% endfor %}
-    </video>
+  </video>
 </sources>

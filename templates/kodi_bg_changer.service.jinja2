@@ -1,0 +1,18 @@
+[Unit]
+Description=Change the kodi background image
+After=network.target
+
+[Service]
+ExecStart={{ kodi_path }}/scripts/xbmc_bg_changer.sh
+WorkingDirectory=/tmp
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=kodi_bg_changer
+NotifyAccess=all
+User=root
+Group=root
+Nice=1
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

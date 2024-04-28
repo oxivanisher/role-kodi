@@ -146,14 +146,31 @@
   become: true
   become_user: root
 
-- name: Ensure background changer script in cron.hourly
+- name: Remove legacy cron link
   ansible.builtin.file:
-    src: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
-    dest: /etc/cron.hourly/xbmc_bg_changer
-    owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
-    state: link
+    path: /etc/cron.hourly/xbmc_bg_changer
+    state: absent
   when: ansible_distribution != "LibreELEC"
   ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  become_user: root
+
+- name: Deploy systemctl background changer systemd unit
+  ansible.builtin.template:
+    src: kodi_bg_changer.service.jinja2
+    dest: /etc/systemd/system/kodi_bg_changer.service
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  become_user: root
+
+- name: Deploy systemctl background changer systemd unit timer
+  ansible.builtin.template:
+    src: kodi_bg_changer.timer.jinja2
+    dest: /etc/systemd/system/kodi_bg_changer.timer
+    owner: root
+    group: root
+    mode: "0644"
   become: true
   become_user: root

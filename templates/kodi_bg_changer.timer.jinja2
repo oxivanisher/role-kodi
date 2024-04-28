@@ -1,0 +1,10 @@
+[Unit]
+Description=Change the kodi background image every hour
+
+[Timer]
+Unit=kodi_bg_changer
+OnCalendar=hourly
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target
