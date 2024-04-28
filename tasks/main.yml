@@ -51,19 +51,19 @@
       become: true
       become_user: root
 
+    - name: Ensure flatpak is installed
+      ansible.builtin.package:
+        name: flatpak
+        state: present
+      become: true
+      become_user: root
+
     - name: Enable the flathub remote in the system installation
       community.general.flatpak_remote:
         name: flathub
         state: present
         enabled: true
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-      become: true
-      become_user: root
-
-    - name: Ensure flatpak is installed
-      ansible.builtin.package:
-        name: flatpak
-        state: present
       become: true
       become_user: root
 
