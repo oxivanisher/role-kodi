@@ -28,6 +28,8 @@
       ansible.builtin.package:
         name: kodi
         state: absent
+      become: true
+      become_user: root
 
     - name: Remove legacy apt file
       ansible.builtin.file:
