@@ -1,5 +1,6 @@
 kodi
 ====
+[![Ansible Lint](https://github.com/oxivanisher/role-kodi/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/oxivanisher/role-kodi/actions/workflows/ansible-lint.yml)
 
 This role installs the kodi mediacenter.
 
