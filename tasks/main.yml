@@ -31,23 +31,17 @@
       become: true
       become_user: root
 
-    - name: Remove legacy apt file
+    - name: Remove legacy apt list file
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_jammy.list
         state: absent
       become: true
       become_user: root
 
-    - name: Add Kodi repo using key from URL
-      ansible.builtin.deb822_repository:
-        name: kodi-ppa
-        types: [deb, deb-src]
-        uris: https://ppa.launchpadcontent.net/team-xbmc/ppa/ubuntu
-        suites: ["{{ ansible_distribution_release | lower }}"]
-        components: [main]
-        signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x189701DA570C56B9488EF60A6D975C4791E7EE5E"
+    - name: Remove legacy apt source file
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/kodi-ppa.source
         state: absent
-        enabled: true
       become: true
       become_user: root
 
