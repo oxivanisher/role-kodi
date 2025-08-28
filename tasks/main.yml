@@ -3,6 +3,8 @@
 - name: "Setting kodi directory to /home/{{ kodi_os_user }}"
   ansible.builtin.set_fact:
     kodi_path: "/home/{{ kodi_os_user }}"
+    kodi_scripts_path: /usr/local/bin
+    kodi_background_path: /usr/local/share/kodi_background
     kodi_systemd_location: /etc/systemd/system/
   when:
     - kodi_os_user | length > 0
@@ -10,9 +12,11 @@
 
 - name: Setting kodi variables for openelec
   ansible.builtin.set_fact:
-    kodi_os_user: "root"
-    kodi_path: "/storage"
-    kodi_systemd_location: /storage/.config/system.d
+    kodi_path: /storage
+    kodi_os_user: root
+    kodi_scripts_path: "{{ kodi_path }}"
+    kodi_background_path: "{{ kodi_path }}/background_images"
+    kodi_systemd_location: "{{ kodi_path }}/.config/system.d"
   when: ansible_distribution == "LibreELEC"
 
 - name: Install kodi on ubuntu
@@ -106,9 +110,9 @@
 
 - name: Ensure background images folder
   ansible.builtin.file:
-    path: "{{ kodi_path }}/background_images/"
-    owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    path: "{{ kodi_background_path }}"
+    owner: root
+    group: root
     mode: "0750"
     state: directory
   become: true
@@ -117,46 +121,20 @@
 - name: Putting background images in place
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/kodi_background_images/"
-    dest: "{{ kodi_path }}/background_images/"
-    owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    dest: "{{ kodi_background_path }}"
+    owner: root
+    group: root
     mode: "0644"
-  become: true
-  become_user: root
-
-- name: Ensure scripts folder
-  ansible.builtin.file:
-    path: "{{ kodi_path }}/scripts/"
-    owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
-    mode: "0750"
-    state: directory
   become: true
   become_user: root
 
 - name: Install background changer script
   ansible.builtin.template:
     src: kodi_bg_changer.sh.jinja2
-    dest: "{{ kodi_path }}/scripts/kodi_bg_changer.sh"
-    owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    dest: "{{ kodi_scripts_path }}/kodi_bg_changer.sh"
+    owner: root
+    group: root
     mode: "0750"
-  become: true
-  become_user: root
-
-- name: Remove legacy cron link
-  ansible.builtin.file:
-    path: /etc/cron.hourly/xbmc_bg_changer
-    state: absent
-  when: ansible_distribution != "LibreELEC"
-  become: true
-  become_user: root
-
-- name: Remove legacy cron script
-  ansible.builtin.file:
-    path: "{{ kodi_path }}/scripts/xbmc_bg_changer.sh"
-    state: absent
-  when: ansible_distribution != "LibreELEC"
   become: true
   become_user: root
 
@@ -179,5 +157,3 @@
     mode: "0644"
   become: true
   become_user: root
-
-# /storage/.config/system.d

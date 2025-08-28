@@ -1,14 +1,12 @@
 #!/bin/bash
 
-SRCDIR={{ kodi_path }}/background_images/
-INPWD=$(pwd)
+NEWNAME=$(
+  find . -maxdepth 1 -name "*.jpg" -type f -printf "%f\n" | \
+  while read x; do
+    echo "$((RANDOM % 1000)):$x"
+  done | sort -n | sed 's/[0-9]*://' | head -1
+)
 
-cd $SRCDIR
+echo "Linking $NEWNAME to dynamic_bg.jpg"
 
-NEWNAME=$(ls | while read x; do echo "`expr $RANDOM % 1000`:$x"; done | sort -n| sed 's/[0-9]*://' | head -1)
-
-cd ..
-ln -fs background_images/$NEWNAME bg.jpg
-chown {{ kodi_os_user }} bg.jpg
-
-cd $INPWD
+ln -fs $NEWNAME dynamic_bg.jpg

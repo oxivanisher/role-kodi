@@ -1,10 +1,10 @@
 [Unit]
-Description=Change the kodi background image
+Description=Change the Kodi background image
 After=network.target
 
 [Service]
-ExecStart={{ kodi_path }}/scripts/xbmc_bg_changer.sh
-WorkingDirectory=/tmp
+ExecStart={{ kodi_scripts_path }}/xbmc_bg_changer.sh
+WorkingDirectory={{ kodi_background_path }}
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=kodi_bg_changer
