@@ -157,3 +157,12 @@
     mode: "0644"
   become: true
   become_user: root
+
+- name: Enable systemctl background changer systemd unit timer
+  ansible.builtin.systemd:
+    name: "kodi_bg_changer.timer"
+    daemon_reload: true
+    state: started
+    enabled: true
+  become: true
+  become_user: root
