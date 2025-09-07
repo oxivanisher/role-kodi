@@ -14,6 +14,10 @@
   ansible.builtin.set_fact:
     kodi_path: /storage
     kodi_os_user: root
+  when: ansible_distribution == "LibreELEC"
+
+- name: Setting kodi path variables for openelec
+  ansible.builtin.set_fact:
     kodi_scripts_path: "{{ kodi_path }}"
     kodi_background_path: "{{ kodi_path }}/background_images"
     kodi_systemd_location: "{{ kodi_path }}/.config/system.d"
