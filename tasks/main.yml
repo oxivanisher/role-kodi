@@ -30,6 +30,7 @@
   ansible.builtin.set_fact:
     kodi_path: /storage
     kodi_os_user: root
+    kodi_os_user_group: root
   when: ansible_distribution == "LibreELEC"
 
 - name: Setting kodi path variables for openelec
