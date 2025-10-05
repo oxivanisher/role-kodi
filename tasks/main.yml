@@ -1,8 +1,15 @@
 ---
 
-- name: "Setting kodi directory to /home/{{ kodi_os_user }}"
+- name: Lookup user home and group
   ansible.builtin.set_fact:
-    kodi_path: "/home/{{ kodi_os_user }}"
+    kodi_os_user_home: "{{ lookup('env', 'HOME') }}"
+    kodi_os_user_group: "{{ lookup('pipe', 'id -gn') }}"
+  become: true
+  become_user: "{{ kodi_os_user }}"
+
+- name: Setting kodi directory to home of kodi user
+  ansible.builtin.set_fact:
+    kodi_path: "{{ kodi_os_user_home }}"
     kodi_scripts_path: /usr/local/bin
     kodi_background_path: /usr/local/share/kodi_background
     kodi_systemd_location: /etc/systemd/system/
@@ -88,7 +95,7 @@
     state: directory
     mode: "0755"
     owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    group: "{{ kodi_os_user_group }}"
   become: true
   become_user: root
 
@@ -97,7 +104,7 @@
     src: advancedsettings.xml.jinja2
     dest: "{{ kodi_path }}/{{ kodi_data_dir }}/advancedsettings.xml"
     owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    group: "{{ kodi_os_user_group }}"
     mode: "0644"
   become: true
   become_user: root
@@ -107,7 +114,7 @@
     src: sources.xml.jinja2
     dest: "{{ kodi_path }}/{{ kodi_data_dir }}/sources.xml"
     owner: "{{ kodi_os_user }}"
-    group: "{{ kodi_os_user }}"
+    group: "{{ kodi_os_user_group }}"
     mode: "0644"
   become: true
   become_user: root
