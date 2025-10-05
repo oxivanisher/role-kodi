@@ -1,44 +1,38 @@
 ---
-- name: Get home directory of kodi user
-  ansible.builtin.getent:
-    database: passwd
-    key: "{{ kodi_os_user }}"
-  ignore_errors: "{{ ansible_check_mode }}"
+- name: Gather infos for non LibreELEC systems
+  when: ansible_distribution != "LibreELEC"
+  block:
+    - name: Gather kodi_os_user user infos
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ kodi_os_user }}"
 
-- name: Set home directory var for kodi user
-  ansible.builtin.set_fact:
-    kodi_os_user_home: "{{ getent_passwd[kodi_os_user][4] }}"
-  ignore_errors: "{{ ansible_check_mode }}"
+    - name: Lookup home and group for kodi_os_user
+      ansible.builtin.set_fact:
+        kodi_os_user_group: "{{ getent_passwd[kodi_os_user][2] }}"
+        kodi_os_user_home: "{{ getent_passwd[kodi_os_user][4] }}"
 
-- name: Lookup user home and group
-  ansible.builtin.set_fact:
-    kodi_os_user_group: "{{ lookup('pipe', 'id -gn') }}"
-  become: true
-  become_user: "{{ kodi_os_user }}"
+    - name: Setting kodi directory to home of kodi user
+      ansible.builtin.set_fact:
+        kodi_path: "{{ kodi_os_user_home }}"
+        kodi_scripts_path: /usr/local/bin
+        kodi_background_path: /usr/local/share/kodi_background
+        kodi_systemd_location: /etc/systemd/system/
 
-- name: Setting kodi directory to home of kodi user
-  ansible.builtin.set_fact:
-    kodi_path: "{{ kodi_os_user_home }}"
-    kodi_scripts_path: /usr/local/bin
-    kodi_background_path: /usr/local/share/kodi_background
-    kodi_systemd_location: /etc/systemd/system/
-  when:
-    - kodi_os_user | length > 0
-    - ansible_distribution != "LibreELEC"
-
-- name: Setting kodi variables for openelec
-  ansible.builtin.set_fact:
-    kodi_path: /storage
-    kodi_os_user: root
-    kodi_os_user_group: root
+- name: Gather infos for LibreELEC systems
   when: ansible_distribution == "LibreELEC"
+  block:
+    - name: Setting kodi variables for openelec
+      ansible.builtin.set_fact:
+        kodi_path: /storage
+        kodi_os_user: root
+        kodi_os_user_group: root
 
-- name: Setting kodi path variables for openelec
-  ansible.builtin.set_fact:
-    kodi_scripts_path: "{{ kodi_path }}"
-    kodi_background_path: "{{ kodi_path }}/background_images"
-    kodi_systemd_location: "{{ kodi_path }}/.config/system.d"
-  when: ansible_distribution == "LibreELEC"
+    - name: Setting kodi path variables for openelec
+      ansible.builtin.set_fact:
+        kodi_scripts_path: "{{ kodi_path }}"
+        kodi_background_path: "{{ kodi_path }}/background_images"
+        kodi_systemd_location: "{{ kodi_path }}/.config/system.d"
 
 - name: Install kodi on ubuntu
   when: ansible_distribution != "LibreELEC"
