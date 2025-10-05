@@ -11,20 +11,21 @@ If the variables are set, this role also copies background images for kodi with 
 Role Variables
 --------------
 
-| Name                    | Comment                               | Default value |
-|-------------------------|---------------------------------------|---------------|
-| kodi_os_user            | The OS user for which `advancedsettings.xml` and the background images are configured |  |
-| kodi_mysql_host         | The MySQL host                        | |
-| kodi_mysql_port         | The MySQL port                        | |
-| kodi_mysql_username     | The MySQL user                        | |
-| kodi_mysql_database     | The MySQL database                    | |
-| kodi_mysql_password     | The MySQL password                    | |
-| kodi_metadata_share     | A smb or nfs share where the metadata will be stored centralized | |
-| kodi_webserver_username | The webserver username to be set      | |
-| kodi_webserver_password | The webserver password to be set      | |
-| kodi_wins_server        | The WINS server to be set             | |
-| kodi_smb_workgroup      | The SMB workgroup to be set           | |
-| kodi_sources            | A list of sources to be added to kodi | `[]` |
+| Name                    | Comment                                                                               | Default value                                      |
+| ----------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| kodi_bg_images_src_path | The location of background images for kodi                                            | `{{ playbook_dir }}/files/kodi_background_images/` |
+| kodi_os_user            | The OS user for which `advancedsettings.xml` and the background images are configured |                                                    |
+| kodi_mysql_host         | The MySQL host                                                                        |                                                    |
+| kodi_mysql_port         | The MySQL port                                                                        |                                                    |
+| kodi_mysql_username     | The MySQL user                                                                        |                                                    |
+| kodi_mysql_database     | The MySQL database                                                                    |                                                    |
+| kodi_mysql_password     | The MySQL password                                                                    |                                                    |
+| kodi_metadata_share     | A smb or nfs share where the metadata will be stored centralized                      |                                                    |
+| kodi_webserver_username | The webserver username to be set                                                      |                                                    |
+| kodi_webserver_password | The webserver password to be set                                                      |                                                    |
+| kodi_wins_server        | The WINS server to be set                                                             |                                                    |
+| kodi_smb_workgroup      | The SMB workgroup to be set                                                           |                                                    |
+| kodi_sources            | A list of sources to be added to kodi                                                 | `[]`                                               |
 
 
 The `kodi_sources` variable is a list of sources in the form of `name`: `source`:

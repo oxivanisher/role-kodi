@@ -124,7 +124,7 @@
 
 - name: Putting background images in place
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/files/kodi_background_images/"
+    src: "{{ kodi_bg_images_src_path }}"
     dest: "{{ kodi_background_path }}"
     owner: root
     group: root

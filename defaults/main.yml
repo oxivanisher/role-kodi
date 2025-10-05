@@ -1,5 +1,6 @@
 ---
 # defaults file for kodi
+kodi_bg_images_src_path: "{{ playbook_dir }}/files/kodi_background_images/"
 kodi_os_user:
 kodi_mysql_host:
 kodi_mysql_port:
