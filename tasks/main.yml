@@ -1,6 +1,6 @@
 ---
 - name: Gather infos for non LibreELEC systems
-  when: ansible_distribution != "LibreELEC"
+  when: ansible_facts.distribution!= "LibreELEC"
   block:
     - name: Gather kodi_os_user user infos
       ansible.builtin.getent:
@@ -9,8 +9,8 @@
 
     - name: Lookup home and group for kodi_os_user
       ansible.builtin.set_fact:
-        kodi_os_user_group: "{{ getent_passwd[kodi_os_user][2] }}"
-        kodi_os_user_home: "{{ getent_passwd[kodi_os_user][4] }}"
+        kodi_os_user_group: "{{ ansible_facts.getent_passwd[kodi_os_user][2] }}"
+        kodi_os_user_home: "{{ ansible_facts.getent_passwd[kodi_os_user][4] }}"
 
     - name: Setting kodi directory to home of kodi user
       ansible.builtin.set_fact:
@@ -20,7 +20,7 @@
         kodi_systemd_location: /etc/systemd/system/
 
 - name: Gather infos for LibreELEC systems
-  when: ansible_distribution == "LibreELEC"
+  when: ansible_facts.distribution== "LibreELEC"
   block:
     - name: Setting kodi variables for openelec
       ansible.builtin.set_fact:
@@ -35,7 +35,7 @@
         kodi_systemd_location: "{{ kodi_path }}/.config/system.d"
 
 - name: Install kodi on ubuntu
-  when: ansible_distribution != "LibreELEC"
+  when: ansible_facts.distribution!= "LibreELEC"
   block:
     # install package on ubuntu hosts as flatpak since the PPA is abandoned
 
