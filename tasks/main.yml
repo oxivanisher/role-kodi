@@ -48,28 +48,24 @@
         name: kodi
         state: absent
       become: true
-      become_user: root
 
     - name: Remove legacy apt list file
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/ppa_team_xbmc_ppa_jammy.list
         state: absent
       become: true
-      become_user: root
 
     - name: Remove legacy apt source file
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/kodi-ppa.source
         state: absent
       become: true
-      become_user: root
 
     - name: Ensure flatpak is installed
       ansible.builtin.package:
         name: flatpak
         state: present
       become: true
-      become_user: root
 
     - name: Enable the flathub remote in the system installation
       community.general.flatpak_remote:
@@ -78,7 +74,6 @@
         enabled: true
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
       become: true
-      become_user: root
 
     - name: Install Kodi
       community.general.flatpak:
@@ -86,7 +81,6 @@
         state: present
         remote: flathub
       become: true
-      become_user: root
 
   rescue:
     - name: Show rescue debug message
@@ -101,7 +95,6 @@
     owner: "{{ kodi_os_user }}"
     group: "{{ kodi_os_user_group }}"
   become: true
-  become_user: root
 
 - name: Put kodi configuration in place
   ansible.builtin.template:
@@ -111,7 +104,6 @@
     group: "{{ kodi_os_user_group }}"
     mode: "0644"
   become: true
-  become_user: root
 
 - name: Put kodi sources configuration in place
   ansible.builtin.template:
@@ -121,7 +113,6 @@
     group: "{{ kodi_os_user_group }}"
     mode: "0644"
   become: true
-  become_user: root
 
 - name: Ensure background images folder
   ansible.builtin.file:
@@ -131,7 +122,6 @@
     mode: "0750"
     state: directory
   become: true
-  become_user: root
 
 - name: Putting background images in place
   ansible.builtin.copy:
@@ -141,7 +131,6 @@
     group: root
     mode: "0644"
   become: true
-  become_user: root
 
 - name: Install background changer script
   ansible.builtin.template:
@@ -151,7 +140,6 @@
     group: root
     mode: "0750"
   become: true
-  become_user: root
 
 - name: Deploy systemctl background changer systemd unit
   ansible.builtin.template:
@@ -161,7 +149,6 @@
     group: root
     mode: "0644"
   become: true
-  become_user: root
 
 - name: Deploy systemctl background changer systemd unit timer
   ansible.builtin.template:
@@ -171,7 +158,6 @@
     group: root
     mode: "0644"
   become: true
-  become_user: root
 
 - name: Enable systemctl background changer systemd unit timer
   ansible.builtin.systemd:
@@ -180,4 +166,3 @@
     state: started
     enabled: true
   become: true
-  become_user: root
